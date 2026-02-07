@@ -1,0 +1,7 @@
+{
+  "name": "AdvisoryAI - Agentic Financial Platform",
+  "description": "A high-performance platform for financial advisors featuring agentic AI workflows, LOA chasing, and real-time intelligence using the Gemini API.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

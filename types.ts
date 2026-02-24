@@ -8,6 +8,17 @@ export enum ViewType {
   SETTINGS = 'SETTINGS'
 }
 
+export type TemplateType = 'Email' | 'SMS' | 'WhatsApp' | 'VOIP';
+
+export interface MessageTemplate {
+  id: string;
+  name: string;
+  type: TemplateType;
+  subject?: string;
+  body: string;
+  lastEdited: string;
+}
+
 export interface ClientAsset {
   name: string;
   value: string;

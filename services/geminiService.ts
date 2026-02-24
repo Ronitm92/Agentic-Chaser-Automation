@@ -3,12 +3,12 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
-export const queryJarvisKnowledgeBase = async (query: string) => {
+export const queryJarvisKnowledgeBase = async (query: string, clientContext: string) => {
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
-    contents: query,
+    contents: `Firm Intelligence Context: ${clientContext}\n\nAdvisor Query: ${query}`,
     config: {
-      systemInstruction: "You are Jarvis, an expert AI assistant for UK financial advisors. You have access to vast knowledge about FCA regulations, tax rules (VCT, EIS, ISA, Pensions), and provider turnaround times. Provide concise, professional, and actionable insights. If referencing regulations, mention specific sections if possible.",
+      systemInstruction: "You are Jarvis, the firm-wide intelligence engine for AdvisoryAI. You have access to the firm's specific client data summary, market insights, and regulatory rules. When answering, reference specific clients, their LOA statuses, or goals if relevant to the query. Be proactive, professional, and identify potential workflow bottlenecks or financial opportunities across the firm's portfolio.",
       tools: [{ googleSearch: {} }],
     },
   });

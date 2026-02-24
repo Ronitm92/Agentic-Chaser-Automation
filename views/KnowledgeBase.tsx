@@ -12,12 +12,18 @@ const KnowledgeBase: React.FC = () => {
     if (!query) return;
     setLoading(true);
     setResult(null);
+
+    // Create a comprehensive firm context from MOCK_CLIENTS
+    const clientContext = MOCK_CLIENTS.map(c => 
+      `${c.name} (ID: ${c.id}): LOA Status: ${c.loaStatus}, Next Step: ${c.nextStep}, Goal Progress: ${c.goalProgress}%, Risk Profile: ${c.riskProfile}, Net Worth: ${c.netWorth}. Notes: ${c.notes.join(' ')}`
+    ).join(' | ');
+
     try {
-      const data = await queryJarvisKnowledgeBase(query);
+      const data = await queryJarvisKnowledgeBase(query, clientContext);
       setResult(data);
     } catch (error) {
       console.error(error);
-      setResult({ text: "Sorry, I encountered an error searching for that.", sources: [] });
+      setResult({ text: "Sorry, I encountered an error searching for that. Please check your network or API key.", sources: [] });
     } finally {
       setLoading(false);
     }
@@ -43,7 +49,7 @@ const KnowledgeBase: React.FC = () => {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleQuery()}
                 className="w-full pl-16 pr-24 py-5 text-lg rounded-2xl border-0 shadow-soft ring-1 ring-slate-200 dark:ring-slate-700 bg-white dark:bg-surface-dark text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary outline-none transition-all shadow-inner" 
-                placeholder="Ask Jarvis about firm policies or client case statuses..." 
+                placeholder="Ask Jarvis about firm policies or specific client bottlenecks..." 
                 type="text"
               />
               <button 
@@ -63,8 +69,8 @@ const KnowledgeBase: React.FC = () => {
                     <span className="material-symbols-outlined text-primary">auto_awesome</span>
                     <h3 className="font-display text-xl font-bold">Jarvis Intelligence Response</h3>
                 </div>
-                <div className="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed">
-                    {result.text.split('\n').map((line, i) => <p key={i}>{line}</p>)}
+                <div className="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                    {result.text}
                 </div>
                 {result.sources.length > 0 && (
                   <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
@@ -84,7 +90,7 @@ const KnowledgeBase: React.FC = () => {
             </section>
         )}
 
-        {/* New Client Status Matrix Section */}
+        {/* Client Status Matrix Section */}
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="font-display text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
